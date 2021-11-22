@@ -7,23 +7,34 @@ var randomNumber = function(min, max) {
     return value;
 }; 
 
-var fight = function(enemy) {
-    while(playerInfo.health > 0 && enemy.health > 0) {
-    
+var fightOrSkip = function() {
     var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
 
-        // IF PLAYER CHOOSES TO SKIP
-    if (promptFight === "skip" || promptFight === "SKIP") {
-        //CONFIRM PLAYER WANTS TO QUIT 
+
+    if (promptFight === "" || promptFight === null) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    promptFight = promptFight.toLowerCase();
+    if (promptFight === "skip") {
         var confirmSkip = window.confirm("Are you sure you'd like to quit?");
 
-        // IF YES (TRUE), LEAVE FIGHT
         if (confirmSkip) {
-        window.alert(playerInfo.name + " has chosen to skip this fight! Goodbye!");
-        //SUBTRACT MONEY FROM playerMoney FOR SKIPPING 
-        playerInfo.money = playerInfo.money - 10;
-        console.log("playerMoney", playerInfo.money);
-        break;
+            window.alert(playerInfo.name + " has chosen to skip this fight! Goodbye!");
+
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            return true;
+        }
+    }
+}
+
+var fight = function(enemy) {
+    while(playerInfo.health > 0 && enemy.health > 0) {
+        if (fightOrSkip()); {
+            break;
+        }
+        
     }
 }
 
@@ -60,7 +71,6 @@ if (playerInfo.health <= 0) {
     break;
 } else {
     window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-}}
 };
 
 var startGame = function() {
@@ -168,6 +178,14 @@ var getPlayerName = function() {
     return name;
 };
 
+var test = function() {
+    var response = prompt("Question?");
+    if (response === "" || response === null) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        test();
+    }
+    return response;
+}
 
 var playerInfo = {
     name: getPlayerName(),
